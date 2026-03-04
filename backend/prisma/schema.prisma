@@ -1,0 +1,51 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  password     String
+  name         String?
+  birthDate    DateTime?
+  avatar       String?
+  goals        Goal[]
+  isOnboarded  Boolean  @default(false)
+  createdAt    DateTime @default(now())
+}
+
+model Otp {
+  id         String   @id @default(cuid())
+  email      String
+  code       String
+  isVerified Boolean  @default(false)
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+}
+
+model Goal {
+  id            String   @id @default(uuid())
+  targetAmount  Float
+  dailyAmount   Float
+  currentAmount Float    @default(0)
+  streak        Int      @default(0)
+  lastSaveDate  DateTime?
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  savings       Saving[]
+  createdAt     DateTime @default(now())
+}
+
+model Saving {
+  id        String   @id @default(uuid())
+  amount    Float
+  goalId    String
+  note      String?
+  goal      Goal     @relation(fields: [goalId], references: [id])
+  createdAt DateTime @default(now())
+}
