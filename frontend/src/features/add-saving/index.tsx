@@ -6,6 +6,7 @@ import {
     StyleSheet,
     SafeAreaView,
 } from "react-native";
+import { Audio } from "expo-av";
 import { colors } from "../../shared/theme/colors";
 import { formatCurrency } from "../../shared/utils/formatCurrency";
 import Feather from "@expo/vector-icons/Feather";
@@ -22,6 +23,13 @@ export default function AddSaving() {
     const [note, setNote] = useState("");
     const [loading, setLoading] = useState(false);
     const navigation = useNavigation();
+
+    const playSaveSound = async () => {
+        const { sound } = await Audio.Sound.createAsync(
+            require("../../../assets/sounds/save.mp3")
+        );
+        await sound.playAsync();
+    };
 
     const handlePress = (value: string) => {
         if (value === "delete") {
@@ -60,6 +68,8 @@ export default function AddSaving() {
                 amount: Number(amount),
                 note
             });
+            await playSaveSound();
+
             Toast.show({
                 type: "success",
                 text1: res?.data?.message || "Lưu thành công"

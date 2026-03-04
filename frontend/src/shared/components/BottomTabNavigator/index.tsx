@@ -1,6 +1,7 @@
 import { View, TouchableOpacity, Text } from "react-native";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { Audio } from "expo-av";
 
 import { colors } from "../../../shared/theme/colors";
 import { styles } from "./style";
@@ -10,6 +11,13 @@ export default function BottomTabNavigator() {
     const route = useRoute();
 
     const currentRoute = route.name;
+
+    const playClick = async () => {
+        const { sound } = await Audio.Sound.createAsync(
+            require("../../../../assets/sounds/click.mp3")
+        );
+        await sound.playAsync();
+    };
 
     const renderTab = (
         screenName: string,
@@ -21,7 +29,10 @@ export default function BottomTabNavigator() {
         return (
             <TouchableOpacity
                 style={styles.iconButton}
-                onPress={() => navigation.navigate(screenName)}
+                onPress={async () => {
+                    await playClick();
+                    navigation.navigate(screenName);
+                }}
             >
                 <Feather
                     name={iconName}
@@ -42,18 +53,21 @@ export default function BottomTabNavigator() {
         <View style={styles.wrapper}>
             <View style={styles.container}>
                 {renderTab("Dashboard", "grid", "Tổng quan")}
-
                 {renderTab("YearStreak", "calendar", "Chuỗi")}
 
-                <TouchableOpacity style={styles.floatingButton}
-                    onPress={() => navigation.navigate("NoLayout", {
-                        screen: "AddSaving"
-                    })}>
+                <TouchableOpacity
+                    style={styles.floatingButton}
+                    onPress={async () => {
+                        await playClick();
+                        navigation.navigate("NoLayout", {
+                            screen: "AddSaving"
+                        });
+                    }}
+                >
                     <AntDesign name="plus" size={24} color={colors.textLight} />
                 </TouchableOpacity>
 
                 {renderTab("SavingsHistory", "bar-chart-2", "Thống kê")}
-
                 {renderTab("ProfileSetting", "user", "Cá nhân")}
             </View>
         </View>

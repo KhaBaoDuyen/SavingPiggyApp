@@ -8,7 +8,7 @@ import StreakModal from "./components/StreakModal";
 import { LinearGradient } from "expo-linear-gradient";
 import { formatCurrency } from "../../shared/utils/formatCurrency";
 import { getSavingHistory, checkinSaving } from "../../services/saving.api";
-
+import { Audio } from "expo-av";
 export default function YearStreak() {
 
   const flatListRef = useRef<FlatList>(null);
@@ -23,6 +23,12 @@ export default function YearStreak() {
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
   const [inputValue, setInputValue] = useState("");
 
+  const playSaveSound = async () => {
+    const { sound } = await Audio.Sound.createAsync(
+      require("../../../assets/sounds/save.mp3")
+    );
+    await sound.playAsync();
+  };
   const MAX_RENDER_DAYS = Math.max(currentDay + 30, 365);
 
   const getISODate = (iso: string) => iso.slice(0, 10);
@@ -92,8 +98,8 @@ export default function YearStreak() {
 
       });
 
-      console.log("savingMap:", savingMap);
-      console.log("dateMapTemp:", dateMapTemp);
+      // console.log("savingMap:", savingMap);
+      // console.log("dateMapTemp:", dateMapTemp);
 
       setSavings(savingMap);
       setDateMap(dateMapTemp);
@@ -101,9 +107,7 @@ export default function YearStreak() {
       setTotalSaved(total);
 
     } catch (err) {
-
       console.log(err);
-
     }
 
   };
@@ -160,7 +164,7 @@ export default function YearStreak() {
       });
 
       await loadData();
-
+      await playSaveSound();
     }
 
     setInputValue("");
