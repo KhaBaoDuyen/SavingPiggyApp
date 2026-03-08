@@ -39,7 +39,7 @@ export default function SplashScreen() {
     const checkAuth = async () => {
       try {
         const token = await AsyncStorage.getItem("token");
-        console.log("TOKEN:", token);
+        // console.log("TOKEN:", token);
 
         if (!token) {
           navigation.replace("NoLayout", { screen: "Login" });
@@ -47,7 +47,7 @@ export default function SplashScreen() {
         }
 
         const res = await getMyGoals();
-        console.log("GOALS RESPONSE:", res.data);
+        // console.log("GOALS RESPONSE:", res.data);
         
         const goals = res.data.data;
 

@@ -43,9 +43,8 @@ export default function Login() {
             if (!goalRes.data || goalRes.data.data.length === 0) {
                 navigation.replace("CreateGoal");
             } else {
-                navigation.replace("Home");
+                navigation.replace("Main");
             }
-
         } catch (error) {
             console.log(error);
         }
